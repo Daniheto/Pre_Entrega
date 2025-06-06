@@ -6,18 +6,32 @@ const API = "https://fakestoreapi.com/products";
 async function listadoProductos() {
     try {
         const response = await fetch(API);
-        const data = await response.json();
-        console.log(data);
+        const text = await response.text();
+        const data = JSON.parse(text);
+        for (const producto of data) {
+            console.log(`Producto con ID ${producto.id}:`);
+            console.log(`Título: ${producto.title}`);
+            console.log(`Precio: $${producto.price}`);
+            console.log(`Categoría: ${producto.category}`);
+            console.log(`Descripción: ${producto.description}`);
+            console.log("=====================================");
+        }
     } catch (error) {
-        console.error("Error al listae los productos:", error);
+        console.error("Error al listar los productos:", error);
     }
 }
 
 async function listadoProductosPorId(identificador) {
     try {
         const response = await fetch(API + `/${identificador}`);
-        const data = await response.json();
-        console.log(data);
+        const text = await response.text();
+        const data = JSON.parse(text);
+        const producto = data;
+        console.log(`Producto con ID ${identificador}:`);
+        console.log(`Título: ${producto.title}`);
+        console.log(`Precio: $${producto.price}`);
+        console.log(`Categoría: ${producto.category}`);
+        console.log(`Descripción: ${producto.description}`);
     } catch (error) {
         console.error("Error al listar el producto por ID:", error);
     }
@@ -44,8 +58,10 @@ async function borrarProducto(identificador) {
         const response = await fetch(API + `/${identificador}`, {
             method: "DELETE",
         });
+        const data = await response.json();
         if (response.ok) {
             console.log("Producto borrado con éxito");
+            console.log("Se borró el producto:", data);
         } else {
             console.error("Error al borrar el producto");
         }
